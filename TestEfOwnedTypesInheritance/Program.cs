@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
+using TestEfOwnedTypesInheritance.EntityFrameworkDemos;
+using TestEfOwnedTypesInheritance.LanguageFeatureTests;
 
 namespace TestEfOwnedTypesInheritance
 {
@@ -10,7 +12,7 @@ namespace TestEfOwnedTypesInheritance
 
         #region " - - - - - - Fields - - - - - - "
 
-        private static IServiceProvider s_ServiceProvider;
+        private static IServiceProvider s_ServiceProvider = null!;
 
         #endregion //Fields
 
@@ -25,13 +27,10 @@ namespace TestEfOwnedTypesInheritance
             try
             {
                 //exitCode = await s_ServiceProvider.GetService<IAppHost>().RunAsync(args);
-                var dbContext = s_ServiceProvider.GetService<TestDbContext>();
-                var order = await dbContext.SettlementOrders
-                    .Include(o => o.IndividualConsumers)
-                    .Include(o => o.OrganisationalConsumers)
-                    .FirstOrDefaultAsync(o => o.Id == 1);
+                //await new EntityFrameworkCoreThreePointOneDemo(s_ServiceProvider).DemoAsync();
+                await new EntityFrameworkCoreFivePointZeroDemo(s_ServiceProvider).DemoAsync();
+                CSharpNineDemo.Demo();
 
-                Console.WriteLine(order.PropertyAddress.Street);
                 exitCode = 0;
             }
             catch (Exception ex)
@@ -70,17 +69,16 @@ namespace TestEfOwnedTypesInheritance
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TestDbContext>(config =>
+            services.AddLogging();
+            services.AddDbContext<ITestDbContext, TestDbContext>(config =>
             {
                 config.UseSqlServer("Server=.\\SQL2017;Database=TestEfOwnedInheritance;Trusted_Connection=True;MultipleActiveResultSets=true");
                 config.EnableSensitiveDataLogging();
             });
-
-            services.AddLogging();
         }
 
-
         #endregion //Methods
+
     }
 
 }

@@ -1,9 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using TestEfOwnedTypesInheritance.Entities;
 
 namespace TestEfOwnedTypesInheritance
 {
-    public class TestDbContext : DbContext
+    public interface ITestDbContext : IDisposable
+    {
+        DbSet<IndividualConsumer> IndividualConsumers { get; set; }
+        DbSet<OrganisationalConsumer> OrganisationalConsumers { get; set; }
+        DbSet<SettlementOrder> SettlementOrders { get; set; }
+        DbSet<Document> Documents { get; set; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    }
+
+    public class TestDbContext : DbContext, ITestDbContext
     {
 
         public TestDbContext(DbContextOptions<TestDbContext> options)
@@ -11,9 +25,10 @@ namespace TestEfOwnedTypesInheritance
         {
         }
 
-        public DbSet<SettlementOrder> SettlementOrders { get; set; }
-        public DbSet<OrganisationalConsumer> OrganisationalConsumers { get; set; }
-        public DbSet<IndividualConsumer> IndividualConsumers { get; set; }
+        public DbSet<SettlementOrder> SettlementOrders { get; set; } = null!;
+        public DbSet<OrganisationalConsumer> OrganisationalConsumers { get; set; } = null!;
+        public DbSet<IndividualConsumer> IndividualConsumers { get; set; } = null!;
+        public DbSet<Document> Documents { get; set ; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +49,15 @@ namespace TestEfOwnedTypesInheritance
                 .HasValue<CaveatOrder>(OrderType.CaveatOrder);
 
             entity.OwnsOne(o => o.PropertyAddress);
+        }
+    }
+
+    public class DocumentConfiguration : IEntityTypeConfiguration<Document>
+    {
+
+        public void Configure(EntityTypeBuilder<Document> entity)
+        {
+            entity.ToTable("Documents");
         }
     }
 
@@ -89,6 +113,7 @@ namespace TestEfOwnedTypesInheritance
         public void Configure(EntityTypeBuilder<OrganisationalConsumer> entity)
         {
             entity.HasBaseType<ConsumerBase>();
+            entity.Property(e => e.CompanyType).HasColumnType("char(20)");
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace TestEfOwnedTypesInheritance
+namespace TestEfOwnedTypesInheritance.ValueObjects
 {
     public class CommonAddress : ValueObject
     {
@@ -65,6 +65,26 @@ namespace TestEfOwnedTypesInheritance
         {
             yield return base.GetAtomicValues();
             yield return Country;
+        }
+
+    }
+
+    public class PencilClientAddress : CommonAddress
+    {
+        public PencilClientAddress(string street, string suburb, string state, string someOtherField, string someOtherField2) : base(street, suburb, state)
+        {
+            this.SomeOtherField = someOtherField;
+            this.SomeOtherField2 = someOtherField2;
+        }
+
+        public string SomeOtherField { get; }
+        public string SomeOtherField2 { get; }
+
+        protected override IEnumerable<object> GetAtomicValues()
+        {
+            yield return base.GetAtomicValues();
+            yield return SomeOtherField;
+            yield return SomeOtherField2;
         }
 
     }
