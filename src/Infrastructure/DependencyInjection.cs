@@ -25,9 +25,11 @@ namespace Application
             // DB Context
             services.AddDbContext<ITestDbContext, TestDbContext>(config =>
             {
-                config.UseSqlServer("Server=.\\SQL2017;Database=TestEfOwnedInheritance;Trusted_Connection=True;MultipleActiveResultSets=true");
+                config.UseSqlServer("Server=.\\SQLEXPRESS;Database=TestEfOwnedInheritance;Trusted_Connection=True;MultipleActiveResultSets=true");
                 config.EnableSensitiveDataLogging();
             });
+
+            services.AddScoped<TestDbContextInitialiser>();
 
             return services;
         }

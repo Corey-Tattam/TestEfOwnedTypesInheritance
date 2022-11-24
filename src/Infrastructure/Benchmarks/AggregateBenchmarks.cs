@@ -24,6 +24,7 @@ namespace Application.Features.Benchmarks
     [MemoryDiagnoser]
     public class AggregateBenchmarks : EntityFrameworkBenchMarkBase
     {
+        private const int MaxResultsToTake = 1000;
 
         [Benchmark]
         public void ClientSideEvaluationNoProjectionAndNoTracking()
@@ -32,7 +33,8 @@ namespace Application.Features.Benchmarks
 
             var documents = dbContext.Documents
                 .AsNoTracking()
-                .Where(d => !d.IsDeleted).Take(1000)
+                .Where(d => !d.IsDeleted)
+                .Take(MaxResultsToTake)
                 .ToList();
 
             var averageDocumentsPerOrder = documents.GroupBy(d => d.OrderId)
@@ -50,7 +52,8 @@ namespace Application.Features.Benchmarks
             var documents = dbContext.Documents
                 .AsNoTracking()
                 .Where(d => !d.IsDeleted)
-                .Select(d => d.OrderId).Take(1000)
+                .Select(d => d.OrderId)
+                .Take(MaxResultsToTake)
                 .ToList();
 
             var averageDocumentsPerOrder = documents.GroupBy(OrderId => OrderId)
@@ -66,7 +69,8 @@ namespace Application.Features.Benchmarks
             using var dbContext = CreateContext();
 
             var averageDocumentsPerOrder = dbContext.Documents
-                .AsNoTracking().Take(1000)
+                .AsNoTracking()
+                .Take(MaxResultsToTake)
                 .Where(d => !d.IsDeleted)
                 .GroupBy(d => d.OrderId)
                 .Select(grp => grp.Count())

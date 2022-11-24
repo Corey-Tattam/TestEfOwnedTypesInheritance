@@ -8,7 +8,7 @@ namespace Application.Features.Benchmarks
         protected static TestDbContext CreateContext() =>
             new TestDbContext(
                 new DbContextOptionsBuilder<TestDbContext>()
-                    .UseSqlServer("Server=.\\SQL2017;Database=TestEfOwnedInheritance;Trusted_Connection=True;MultipleActiveResultSets=true")
+                    .UseSqlServer("Server=.\\SQLEXPRESS;Database=TestEfOwnedInheritance;Trusted_Connection=True;MultipleActiveResultSets=true")
                     .Options);
     }
 }

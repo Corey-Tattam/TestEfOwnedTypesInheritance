@@ -12,7 +12,7 @@ namespace Application.Features.EntityFrameworkDemos
 {
     public class FilteredIncludesDemo : IEntityFrameworkFeatureDemo
     {
-        private const string EfCoreFivePointZeroOrderIdentifier = "EfCore5Demo";
+        private const string EfCoreFivePointZeroOrderIdentifier = "Identifier_Seed_1";
 
         public string FeatureDescription => "Filtered Includes";
 
@@ -46,17 +46,17 @@ namespace Application.Features.EntityFrameworkDemos
             // ----------------------------------------
             // -- Previous Method
 
-            var previousGetOrderQuery = dbContext.SettlementOrders.AsNoTracking()
-                .Include(o => o.Documents)
-                .Include(o => o.IndividualConsumers)
-                .Include(o => o.OrganisationalConsumers)
-                .Where(o => o.Identifier == EfCoreFivePointZeroOrderIdentifier);
+            //var previousGetOrderQuery = dbContext.SettlementOrders.AsNoTracking()
+            //    .Include(o => o.Documents)
+            //    .Include(o => o.IndividualConsumers)
+            //    .Include(o => o.OrganisationalConsumers)
+            //    .Where(o => o.Identifier == EfCoreFivePointZeroOrderIdentifier);
 
-            var previousGetOrderQueryString = previousGetOrderQuery.ToQueryString();
-            Console.WriteLine("Previous Method SQL:");
-            Console.WriteLine(previousGetOrderQueryString);
+            //var previousGetOrderQueryString = previousGetOrderQuery.ToQueryString();
+            //Console.WriteLine("Previous Method SQL:");
+            //Console.WriteLine(previousGetOrderQueryString);
 
-            var orderFromPreviousQuery = await previousGetOrderQuery.FirstAsync();
+            //var orderFromPreviousQuery = await previousGetOrderQuery.FirstAsync();
 
 
             // ----------------------------------------
@@ -64,7 +64,7 @@ namespace Application.Features.EntityFrameworkDemos
 
             var newGetOrderQuery = dbContext.SettlementOrders.AsNoTracking()
                 .Include(o => o.Documents.Where(d => !d.IsDeleted))
-                .Include(o => o.IndividualConsumers.Where(ic => ic.IndividualName == "Second Individual"))
+                .Include(o => o.IndividualConsumers.Where(ic => ic.IndividualName == "IndividualName_Order-1_Consumer-1"))
                 .Include(o => o.OrganisationalConsumers.Where(oc => oc.CompanyType == CompanyType.Company))
                 .Where(o => o.Identifier == EfCoreFivePointZeroOrderIdentifier);
 

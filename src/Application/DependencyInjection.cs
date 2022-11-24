@@ -9,7 +9,7 @@ namespace Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services
-                .AddScoped<IEntityFrameworkFeatureDemo, FilteredIncludesDemo>()
+                //.AddScoped<IEntityFrameworkFeatureDemo, FilteredIncludesDemo>()
                 .AddScoped<IEntityFrameworkFeatureDemo, ProjectionWithTrackingDemo>()
                 .AddScoped<IEntityFrameworkFeatureDemo, ProjectionWithRecordsDemo>()
                 .AddScoped<IEntityFrameworkFeatureDemo, AggregateDemo>()

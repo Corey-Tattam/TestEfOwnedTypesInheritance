@@ -16,7 +16,7 @@ namespace Application.Features.EntityFrameworkDemos
     /// </summary>
     public class ProjectionWithTrackingDemo : IEntityFrameworkFeatureDemo
     {
-        private const string EfCoreFivePointZeroOrderIdentifier = "EfCore5Demo";
+        private const string EfCoreFivePointZeroOrderIdentifier = "Identifier_Seed_1";
 
         public string FeatureDescription => "Filtered Includes";
 

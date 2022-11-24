@@ -36,12 +36,16 @@ namespace Application.Features.Benchmarks
     public class ProjectionBenchmarks : EntityFrameworkBenchMarkBase
     {
 
+        private const int MaxResultsToTake = 1000;
+
         [Benchmark]
         public void NoProjectionAndTracking()
         {
             using var dbContext = CreateContext();
 
-            var orders = dbContext.SettlementOrders.Take(1000).ToList();
+            var orders = dbContext.SettlementOrders
+                .Take(MaxResultsToTake)
+                .ToList();
         }
 
         [Benchmark]
@@ -49,23 +53,35 @@ namespace Application.Features.Benchmarks
         {
             using var dbContext = CreateContext();
 
-            var orders = dbContext.SettlementOrders.AsNoTracking().Take(1000).ToList();
+            var orders = dbContext.SettlementOrders
+                .AsNoTracking()
+                .Take(MaxResultsToTake)
+                .ToList();
         }
 
-        [Benchmark]
-        public void WithProjectionAndTracking()
-        {
-            using var dbContext = CreateContext();
+        // This test is not worth it, as EF will not track anything here. To show a better example, we
+        // would need to show part projection with a child object being tracked.
+        //[Benchmark]
+        //public void WithProjectionAndTracking()
+        //{
+        //    using var dbContext = CreateContext();
 
-            var orders = dbContext.SettlementOrders.Select(o => new { o.Identifier, o.PropertyAddress.Street }).Take(1000).ToList();
-        }
+        //    var orders = dbContext.SettlementOrders
+        //        .Select(o => new { o.Identifier, o.PropertyAddress.Street })
+        //        .Take(MaxResultsToTake)
+        //        .ToList();
+        //}
 
         [Benchmark]
         public void WithProjectionAndNoTracking()
         {
             using var dbContext = CreateContext();
 
-            var orders = dbContext.SettlementOrders.AsNoTracking().Select(o => new { o.Identifier, o.PropertyAddress.Street }).Take(1000).ToList();
+            var orders = dbContext.SettlementOrders
+                .AsNoTracking()
+                .Select(o => new { o.Identifier, o.PropertyAddress.Street })
+                .Take(MaxResultsToTake)
+                .ToList();
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using Application;
 using ConsoleUi.Interfaces;
+using Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
@@ -19,18 +20,14 @@ namespace TestEfOwnedTypesInheritance
 
         public static async Task<int> Main(string[] args)
         {
-            Initialise();
+            await InitialiseAsync();
 
             int exitCode;
 
             try
             {
-                //exitCode = await s_ServiceProvider.GetService<IAppHost>().RunAsync(args);
-                //await new EntityFrameworkCoreThreePointOneDemo(s_ServiceProvider).DemoAsync();
                 var appHost = s_ServiceProvider.GetRequiredService<IAppHost>();
                 exitCode = await appHost.RunAsync(args);
-                //await new EntityFrameworkCoreFivePointZeroDemo(serviceScopeFactory).DemoAsync();
-                //CSharpNineDemo.Demo();
             }
             catch (Exception ex)
             {
@@ -56,12 +53,20 @@ namespace TestEfOwnedTypesInheritance
             if (s_ServiceProvider is IDisposable) ((IDisposable)s_ServiceProvider).Dispose();
         } //CleanUp
 
-        private static void Initialise()
+        private static async Task InitialiseAsync()
         {
             // Initialise Services.
             var services = new ServiceCollection();
             ConfigureServices(services);
             s_ServiceProvider = services.BuildServiceProvider();
+
+            // Initialise and seed the database.
+            using (var scope = s_ServiceProvider.CreateScope())
+            {
+                var initialiser = scope.ServiceProvider.GetRequiredService<TestDbContextInitialiser>();
+                await initialiser.InitialiseAsync();
+                await initialiser.SeedAsync();
+            }
         } //Initialise
 
         private static void ConfigureServices(IServiceCollection services)
