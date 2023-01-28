@@ -14,6 +14,7 @@ namespace Application
                 .AddScoped<IEntityFrameworkFeatureDemo, ProjectionWithRecordsDemo>()
                 .AddScoped<IEntityFrameworkFeatureDemo, AggregateDemo>()
                 .AddScoped<IEntityFrameworkFeatureDemo, ComplexQueriesDemo>()
+                .AddScoped<IEntityFrameworkFeatureDemo, InterceptorsDemo>()
             ;
 
             return services;

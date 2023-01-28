@@ -1,16 +1,20 @@
 ﻿using Application.Interfaces.Persistence;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Collections.Generic;
 
 namespace Infrastructure.Persistence
 {
 
     public class TestDbContext : DbContext, ITestDbContext
     {
+        private readonly IEnumerable<IInterceptor> _interceptors;
 
-        public TestDbContext(DbContextOptions<TestDbContext> options)
+        public TestDbContext(DbContextOptions<TestDbContext> options, IEnumerable<IInterceptor> interceptors)
             : base(options)
         {
+            _interceptors = interceptors;
         }
 
         public DbSet<SettlementOrder> SettlementOrders { get; set; } = null!;
@@ -26,5 +30,10 @@ namespace Infrastructure.Persistence
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TestDbContext).Assembly);
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.AddInterceptors(_interceptors);
+            base.OnConfiguring(optionsBuilder);
+        }
     }
 }

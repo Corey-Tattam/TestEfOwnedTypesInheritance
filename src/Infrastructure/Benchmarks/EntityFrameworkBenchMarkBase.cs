@@ -1,5 +1,7 @@
 ﻿using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Linq;
 
 namespace Application.Features.Benchmarks
 {
@@ -9,6 +11,7 @@ namespace Application.Features.Benchmarks
             new TestDbContext(
                 new DbContextOptionsBuilder<TestDbContext>()
                     .UseSqlServer("Server=.\\SQLEXPRESS;Database=TestEfOwnedInheritance;Trusted_Connection=True;MultipleActiveResultSets=true")
-                    .Options);
+                    .Options, 
+                Enumerable.Empty<IInterceptor>());
     }
 }

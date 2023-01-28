@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Linq;
 
 namespace Infrastructure.Persistence
 {
@@ -10,7 +12,7 @@ namespace Infrastructure.Persistence
             var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();
             optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=TestEfOwnedInheritance;Trusted_Connection=True;MultipleActiveResultSets=true");
 
-            return new TestDbContext(optionsBuilder.Options);
+            return new TestDbContext(optionsBuilder.Options, Enumerable.Empty<IInterceptor>());
         }
     }
 }

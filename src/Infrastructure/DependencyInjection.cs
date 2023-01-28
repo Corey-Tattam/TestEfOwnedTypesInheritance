@@ -2,7 +2,9 @@
 using Application.Interfaces.Persistence;
 using Infrastructure.Demos;
 using Infrastructure.Persistence;
+using Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -21,6 +23,9 @@ namespace Application
 
             // Services
             services.AddScoped<IDemoCollectionRunner, EntityFrameworkDemoCollectionRunner>();
+
+            services.AddScoped<IInterceptor, SaveChangesInterceptorOne>()
+                .AddScoped<IInterceptor, SaveChangesInterceptorTwo>();
 
             // DB Context
             services.AddDbContext<ITestDbContext, TestDbContext>(config =>
